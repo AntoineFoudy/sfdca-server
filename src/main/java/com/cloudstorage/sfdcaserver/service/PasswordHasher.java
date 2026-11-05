@@ -1,14 +1,14 @@
-package com.cloudstorage.sfdcaserver;
+package com.cloudstorage.sfdcaserver.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class PasswordHasher {
 
     // Spring Security's built-in encoder
-    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     // 1. Takes plain string, returns hash
-    public static String hash(String plaintext) {
+    public String hash(String plaintext) {
         if (plaintext == null || plaintext.isEmpty()) {
             throw new IllegalArgumentException("Password must not be empty");
         }
@@ -16,7 +16,7 @@ public class PasswordHasher {
     }
 
     // 2. Checks if a plain password matches a hash
-    public static boolean verify(String plaintext, String hash) {
+    public boolean verify(String plaintext, String hash) {
         if (plaintext == null || hash == null) return false;
         return encoder.matches(plaintext, hash);
     }
