@@ -12,11 +12,11 @@ public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "file_id", nullable = false)
-    private Integer id;
+    private Integer fileId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    private User ownerId;
 
     @Column(name = "file_name", nullable = false)
     private String fileName;
