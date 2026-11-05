@@ -7,10 +7,7 @@ import com.cloudstorage.sfdcaserver.repositories.UserRepository;
 import com.cloudstorage.sfdcaserver.service.PasswordHasher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -26,13 +23,14 @@ public class SignUpController {
 
     private final KeyGeneratorService keyGeneratorService;
 
-    public SignUpController(UserRepository userRepository, KeyGeneratorService keyGeneratorService) {
+    public SignUpController(UserRepository userRepository, KeyGeneratorService keyGeneratorService, PasswordHasher passwordHasher) {
         this.userRepository = userRepository;
         this.keyGeneratorService = keyGeneratorService;
-        this.passwordHasher = new PasswordHasher();
+        this.passwordHasher = passwordHasher;
 
     }
 
+    @PostMapping
     public ResponseEntity<?> userSignUp(@RequestBody SignUpDto signUpDto) throws NoSuchAlgorithmException {
         // Check if email already exists
         if(userRepository.existsByEmail(signUpDto.getEmail())) {

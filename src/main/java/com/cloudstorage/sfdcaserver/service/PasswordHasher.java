@@ -1,7 +1,9 @@
 package com.cloudstorage.sfdcaserver.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PasswordHasher {
 
     // Spring Security's built-in encoder
