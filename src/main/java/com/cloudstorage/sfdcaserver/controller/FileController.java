@@ -1,6 +1,8 @@
 package com.cloudstorage.sfdcaserver.controller;
 
+import com.cloudstorage.sfdcaserver.dtos.FileDownloadDto;
 import com.cloudstorage.sfdcaserver.dtos.FileUploadDto;
+import com.cloudstorage.sfdcaserver.dtos.RequestFileDownloadDto;
 import com.cloudstorage.sfdcaserver.entities.*;
 import com.cloudstorage.sfdcaserver.repositories.FileKeyAccessRepository;
 import com.cloudstorage.sfdcaserver.repositories.FileRepository;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -86,5 +89,40 @@ public class FileController {
         }
 
         return ResponseEntity.ok("File uploaded successfully");
+    }
+
+    @PostMapping("/download")
+    public ResponseEntity<?> downloadFile(@RequestBody RequestFileDownloadDto requestFileDownloadDto) {
+        // Retrieve requested file
+        Optional<File> requestedFile = fileRepository.findByFileId(requestFileDownloadDto.getFileId());
+        // If not
+        if(requestedFile.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Check if Owner has an Access Key to decrypt file
+        Optional<FileKeyAccess> fileKeyAccess =
+                fileKeyAccessRepository.findByIdAndUserId(
+                        requestFileDownloadDto.getFileId(),
+                        requestFileDownloadDto.getUserId()
+                );
+        if(fileKeyAccess.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // If all looks good construct FileDownloadDto
+        FileDownloadDto fileDownloadDto = new FileDownloadDto();
+        fileDownloadDto.setFileName(requestedFile.get().getFileName());
+        fileDownloadDto.setEncryptedAesKey(fileKeyAccess.get().getEncryptedAesKey());
+
+
+        // Download File from S3 Bucket
+        String s3Key = requestedFile.get().getS3Path();
+        byte[] downloadedFileFromS3 = s3Service.downloadFileToS3(s3Key);
+        fileDownloadDto.setEncryptedFile(downloadedFileFromS3);
+
+
+        // Send FileDownloadDto to user
+        return ResponseEntity.ok(fileDownloadDto);
     }
 }
