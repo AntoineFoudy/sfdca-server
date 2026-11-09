@@ -8,6 +8,7 @@ import com.cloudstorage.sfdcaserver.repositories.FileKeyAccessRepository;
 import com.cloudstorage.sfdcaserver.repositories.FileRepository;
 import com.cloudstorage.sfdcaserver.repositories.FolderRepository;
 import com.cloudstorage.sfdcaserver.repositories.UserRepository;
+import com.cloudstorage.sfdcaserver.service.FilePathConstructorService;
 import com.cloudstorage.sfdcaserver.service.S3Service;
 import com.cloudstorage.sfdcaserver.service.UuidService;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +32,16 @@ public class FileController {
     private final UuidService uuidService;
     private final UserRepository userRepository;
     private final FolderRepository folderRepository;
+    private final FilePathConstructorService filePathConstructorService;
 
-    public FileController(FileRepository fileRepository, FileKeyAccessRepository fileKeyAccessRepository, S3Service s3Service, UuidService uuidService, UserRepository userRepository, FolderRepository folderRepository) {
+    public FileController(FileRepository fileRepository, FileKeyAccessRepository fileKeyAccessRepository, S3Service s3Service, UuidService uuidService, UserRepository userRepository, FolderRepository folderRepository, FilePathConstructorService filePathConstructorService) {
         this.fileRepository = fileRepository;
         this.fileKeyAccessRepository = fileKeyAccessRepository;
         this.s3Service = s3Service;
         this.uuidService = uuidService;
         this.userRepository = userRepository;
         this.folderRepository = folderRepository;
+        this.filePathConstructorService = filePathConstructorService;
     }
 
     // Upload file method
@@ -46,8 +49,7 @@ public class FileController {
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @ModelAttribute FileUploadDto fileUploadDto) throws IOException {
         // Generate Custom UUID for file and s3Key
-        String s3Key = fileUploadDto.getS3Path()
-                + "/"
+        String s3Key = filePathConstructorService.generateFilePath(fileUploadDto.getFolderId())
                 + uuidService.generateUuid()
                 + "_"
                 + file.getOriginalFilename();

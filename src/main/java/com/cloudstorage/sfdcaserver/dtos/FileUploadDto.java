@@ -13,7 +13,6 @@ public class FileUploadDto {
     private int ownerId;
     private String fileName;
     private int folderId;
-    private String s3Path;
     private String encryptedAesKey;
 
 }
