@@ -15,4 +15,6 @@ public interface FolderRepository extends JpaRepository<Folder, Integer> {
 
     // Used to find if Folder is Sector/Company or Private
     List<Folder> findByFolderType(String folderType);
+
+    Folder findByFolderId(Integer folderId);
 }
