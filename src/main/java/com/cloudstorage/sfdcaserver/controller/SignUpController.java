@@ -5,6 +5,7 @@ import com.cloudstorage.sfdcaserver.dtos.SignUpDto;
 import com.cloudstorage.sfdcaserver.entities.User;
 import com.cloudstorage.sfdcaserver.repositories.UserRepository;
 import com.cloudstorage.sfdcaserver.service.PasswordHasher;
+import com.cloudstorage.sfdcaserver.service.PersonalFolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +24,13 @@ public class SignUpController {
 
     private final KeyGeneratorService keyGeneratorService;
 
-    public SignUpController(UserRepository userRepository, KeyGeneratorService keyGeneratorService, PasswordHasher passwordHasher) {
+    private final PersonalFolder personalFolder;
+
+    public SignUpController(UserRepository userRepository, KeyGeneratorService keyGeneratorService, PasswordHasher passwordHasher, PersonalFolder personalFolder) {
         this.userRepository = userRepository;
         this.keyGeneratorService = keyGeneratorService;
         this.passwordHasher = passwordHasher;
-
+        this.personalFolder = personalFolder;
     }
 
     @PostMapping
@@ -51,6 +54,9 @@ public class SignUpController {
 
         // Save the user to the database
         userRepository.save(user);
+
+        // Create user's personal folder
+        personalFolder.CreateUserPersonalFolder(user);
 
         // Return status code 201 to indicate successful Sign up
         return ResponseEntity.status(HttpStatus.CREATED).build();
