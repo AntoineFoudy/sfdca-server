@@ -49,8 +49,8 @@ public class ViewDirAndFilesController {
 
         // If it does compile the folders content
         // by getting all the folders and files who have the folderId as their parent folder
-        List<Folder> childFolder = folderRepository.findByParentFolderId(folderId);
-        List<File> childFiles = fileRepository.findByFolderId(folderId);
+        List<Folder> childFolder = folderRepository.findByParentFolderId_FolderId(folderId);
+        List<File> childFiles = fileRepository.findByFolder_FolderId(folderId);
 
         // Add the Compiled data into ViewDirAndContentsDto
         for(Folder f : childFolder) {

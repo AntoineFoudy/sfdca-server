@@ -10,8 +10,8 @@ import java.util.Optional;
 public interface FileKeyAccessRepository extends JpaRepository<FileKeyAccess, FileKeyAccessId> {
 
     // For Retrieving AES keys and for future file sharing
-    Optional<FileKeyAccess> findByIdAndUserId(Integer fileId, Integer userId);
+    Optional<FileKeyAccess> findById_FileIdAndId_UserId(Integer fileId, Integer userId);
 
     // Permission Check
-    List<FileKeyAccess> findByUserId(Integer userId);
+    List<FileKeyAccess> findById_UserId(Integer userId);
 }

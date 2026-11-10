@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,8 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ViewDirAndContentsDto {
-    private List<FolderDataForUserDto> folders;
-    private List<FileDataForUserDto> files;
+    private List<FolderDataForUserDto> folders = new ArrayList<>();
+    private List<FileDataForUserDto> files = new ArrayList<>();
 
     public void addFolderToList(FolderDataForUserDto f) {
         folders.add(f);

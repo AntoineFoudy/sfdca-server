@@ -104,7 +104,7 @@ public class FileController {
 
         // Check if Owner has an Access Key to decrypt file
         Optional<FileKeyAccess> fileKeyAccess =
-                fileKeyAccessRepository.findByIdAndUserId(
+                fileKeyAccessRepository.findById_FileIdAndId_UserId(
                         requestFileDownloadDto.getFileId(),
                         requestFileDownloadDto.getUserId()
                 );
