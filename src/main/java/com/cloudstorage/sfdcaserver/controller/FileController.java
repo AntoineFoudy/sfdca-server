@@ -11,6 +11,7 @@ import com.cloudstorage.sfdcaserver.repositories.UserRepository;
 import com.cloudstorage.sfdcaserver.service.FilePathConstructorService;
 import com.cloudstorage.sfdcaserver.service.S3Service;
 import com.cloudstorage.sfdcaserver.service.UuidService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,7 +110,7 @@ public class FileController {
                         requestFileDownloadDto.getUserId()
                 );
         if(fileKeyAccess.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         // If all looks good construct FileDownloadDto
