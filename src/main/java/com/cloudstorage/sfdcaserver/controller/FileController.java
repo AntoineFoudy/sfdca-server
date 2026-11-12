@@ -110,7 +110,7 @@ public class FileController {
                         requestFileDownloadDto.getUserId()
                 );
         if(fileKeyAccess.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized to access file");
         }
 
         // If all looks good construct FileDownloadDto
